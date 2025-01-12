@@ -1,21 +1,13 @@
 // function Logger(constructor: Function){
 //     console.log("Logging...");
 //     console.log(constructor);
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __runInitializers = (this && this.__runInitializers) || function (thisArg, initializers, value) {
+    var useValue = arguments.length > 2;
+    for (var i = 0; i < initializers.length; i++) {
+        value = useValue ? initializers[i].call(thisArg, value) : initializers[i].call(thisArg);
+    }
+    return useValue ? value : void 0;
+};
 var __esDecorate = (this && this.__esDecorate) || function (ctor, descriptorIn, decorators, contextIn, initializers, extraInitializers) {
     function accept(f) { if (f !== void 0 && typeof f !== "function") throw new TypeError("Function expected"); return f; }
     var kind = contextIn.kind, key = kind === "getter" ? "get" : kind === "setter" ? "set" : "value";
@@ -43,90 +35,115 @@ var __esDecorate = (this && this.__esDecorate) || function (ctor, descriptorIn, 
     if (target) Object.defineProperty(target, contextIn.name, descriptor);
     done = true;
 };
-var __runInitializers = (this && this.__runInitializers) || function (thisArg, initializers, value) {
-    var useValue = arguments.length > 2;
-    for (var i = 0; i < initializers.length; i++) {
-        value = useValue ? initializers[i].call(thisArg, value) : initializers[i].call(thisArg);
-    }
-    return useValue ? value : void 0;
-};
-var __setFunctionName = (this && this.__setFunctionName) || function (f, name, prefix) {
-    if (typeof name === "symbol") name = name.description ? "[".concat(name.description, "]") : "";
-    return Object.defineProperty(f, "name", { configurable: true, value: prefix ? "".concat(prefix, " ", name) : name });
-};
 // }
 // @Logger class Controller{
 // public id=1;
 // }
 // const controller = new Controller();
-function addProperty(constructor) {
-    constructor.prototype.myProperty = "Hello";
-}
-var MyClass = function () {
-    var _classDecorators = [addProperty];
-    var _classDescriptor;
-    var _classExtraInitializers = [];
-    var _classThis;
-    var MyClass = _classThis = /** @class */ (function () {
-        function MyClass_1() {
+// function addProperty(constructor: Function){
+//     constructor.prototype.myProperty="Hello";
+// }
+// @addProperty
+// class MyClass{
+//     myProperty!: string;
+// }
+// const myInstance=new MyClass();
+// console.log((myInstance as any).myProperty);
+// ----------------------------------// 
+// Factory of decorators
+// function Logger(logString: string){
+//     return function (constructor: Function){
+//         console.log(logString);
+//     }
+// }
+// @Logger("Logging-controller")
+// class Controller{
+//     public id=1;
+// }
+// ----------------------------------//
+// HTML INTEGRATION
+// interface IDecoration{
+//     parent:string;
+//     template:string;
+// }
+// function ControllerDecoration(config: IDecoration){
+//     return function <T extends {new (...args: any[]):{
+//         content:string} }>(
+//             originalConstructor:T
+//         ){
+//             return class extends originalConstructor{
+//                 private element:HTMLElement;
+//                 private parent: HTMLElement;
+//                 constructor(...args:any[]){
+//                     super(...args);
+//                     this.parent=document.getElementById(config.parent)!;
+//                     this.element=document.createElement(config.template);
+//                     this.element.innerHTML=this.content;
+//                     this.parent.appendChild(this.element);
+//                 }
+//             }
+//     }
+// }
+// @ControllerDecoration({
+//     parent:'app',
+//     template: "H1",
+// })
+// class Controller{
+//     public content='My custom controller';
+// };
+// const controller=new Controller();
+// ----------------------------------//
+// Decorators of the methods
+// target--prototype of the object
+// name-name of the method 
+// descriptor--property descriptor of the method 
+// function LogMethod(target: any, name:string, descriptor: PropertyDescriptor){
+//     console.log(`Method "${name} of the class "${target.constructor.name}" is called`);
+// }
+// class MyClass{
+//     @LogMethod
+//     myMethod(){
+//         console.log('Hello World!');
+//     }
+// }
+// let obj=new MyClass();
+// obj.myMethod;
+// ----------------------------------//
+// Validation of the type of data
+function ValidateString(target, propertyName, descriptor) {
+    var originalMethod = descriptor.value;
+    descriptor.value = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
         }
-        return MyClass_1;
-    }());
-    __setFunctionName(_classThis, "MyClass");
-    (function () {
-        var _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(null) : void 0;
-        __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
-        MyClass = _classThis = _classDescriptor.value;
-        if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
-        __runInitializers(_classThis, _classExtraInitializers);
-    })();
-    return MyClass = _classThis;
-}();
-var myInstance = new MyClass();
-console.log(myInstance.myProperty);
-function ControllerDecoration(config) {
-    return function (originalConstructor) {
-        return /** @class */ (function (_super) {
-            __extends(class_1, _super);
-            function class_1() {
-                var args = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    args[_i] = arguments[_i];
-                }
-                var _this = _super.apply(this, args) || this;
-                _this.parent = document.getElementById(config.parent);
-                _this.element = document.createElement(config.template);
-                _this.element.innerHTML = _this.content;
-                _this.parent.appendChild(_this.element);
-                return _this;
-            }
-            return class_1;
-        }(originalConstructor));
+        if (typeof args[0] !== 'string') {
+            throw new Error('Invalid input. Expected a string');
+        }
+        return originalMethod.apply(this, args);
     };
 }
-var Controller = function () {
-    var _classDecorators = [ControllerDecoration({
-            parent: 'app',
-            template: "H1",
-        })];
-    var _classDescriptor;
-    var _classExtraInitializers = [];
-    var _classThis;
-    var Controller = _classThis = /** @class */ (function () {
-        function Controller_1() {
-            this.content = 'My custom controller';
-        }
-        return Controller_1;
-    }());
-    __setFunctionName(_classThis, "Controller");
-    (function () {
-        var _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(null) : void 0;
-        __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name, metadata: _metadata }, null, _classExtraInitializers);
-        Controller = _classThis = _classDescriptor.value;
-        if (_metadata) Object.defineProperty(_classThis, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
-        __runInitializers(_classThis, _classExtraInitializers);
-    })();
-    return Controller = _classThis;
+var MyClass = function () {
+    var _a;
+    var _instanceExtraInitializers = [];
+    var _print_decorators;
+    return _a = /** @class */ (function () {
+            function MyClass() {
+                __runInitializers(this, _instanceExtraInitializers);
+            }
+            MyClass.prototype.print = function (value) {
+                console.log("Received value: ".concat(value));
+            };
+            return MyClass;
+        }()),
+        (function () {
+            var _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(null) : void 0;
+            _print_decorators = [ValidateString];
+            __esDecorate(_a, null, _print_decorators, { kind: "method", name: "print", static: false, private: false, access: { has: function (obj) { return "print" in obj; }, get: function (obj) { return obj.print; } }, metadata: _metadata }, null, _instanceExtraInitializers);
+            if (_metadata) Object.defineProperty(_a, Symbol.metadata, { enumerable: true, configurable: true, writable: true, value: _metadata });
+        })(),
+        _a;
 }();
-;
-var controller = new Controller();
+var instance = new MyClass();
+instance.print("Hello"); // Works fine
+// instance.print(42); // Throws error: Invalid input. Expected a string
